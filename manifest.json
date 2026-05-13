@@ -1,0 +1,17 @@
+{
+  "name": "BioAge — Clinical Fitness Index",
+  "short_name": "BioAge",
+  "start_url": "/Bioage/",
+  "display": "standalone",
+  "background_color": "#0D4F8C",
+  "theme_color": "#0D4F8C",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
