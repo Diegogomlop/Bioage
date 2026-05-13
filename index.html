@@ -11,12 +11,235 @@
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="manifest" href="manifest.json">
 <title>BioAge — Clinical Fitness Index</title>
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--blue:#1A6FBF;--blue-dark:#0D4F8C;--blue-light:#EBF4FF;--warn:#D97706;--danger:#C0392B;--danger-bg:#FEF2F2;--success-bg:#EBF4FF;--neutral:#F1F5F9;--text1:#0F172A;--text2:#64748B;--text3:#94A3B8;--border:#E2E8F0;--white:#fff;--bg:#F8FAFC}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text1);overscroll-behavior:none}
+input,select,button{font-family:inherit}
+.screen{display:none;flex-direction:column;height:100dvh;overflow:hidden}.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:90px}.pad{padding:0 16px}
+.app-header{background:linear-gradient(135deg,var(--blue-dark),var(--blue),#1A8FBF);padding:54px 20px 18px;flex-shrink:0}
+.logo-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.logo-box{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px}
+.logo-title{font-size:26px;font-weight:700;color:#fff;letter-spacing:-.5px}.logo-sub{font-size:10px;color:rgba(255,255,255,.75);letter-spacing:2px;margin-top:1px}
+.logo-tags{display:flex;gap:14px;font-size:11px;color:rgba(255,255,255,.8)}
+.tab-bar{display:flex;background:#fff;border-top:0.5px solid var(--border);padding:8px 0 20px;flex-shrink:0}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 0}
+.tab-btn .tab-icon{font-size:22px}.tab-btn .tab-label{font-size:10px;color:var(--text3)}
+.tab-btn.active .tab-label{color:var(--blue);font-weight:600}
+.step-nav{display:flex;gap:4px;padding:10px 12px;overflow-x:auto;flex-shrink:0;background:var(--bg)}
+.step-nav::-webkit-scrollbar{display:none}
+.step-btn{flex-shrink:0;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:transparent;font-size:12px;color:var(--text2);cursor:pointer}
+.step-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.card{background:#fff;border-radius:12px;border:0.5px solid var(--border);padding:14px;margin-bottom:10px}
+.card-title{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:10px}
+.field{margin-bottom:10px}.field label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px}
+.field input,.field select{width:100%;height:40px;border-radius:8px;border:0.5px solid #CBD5E1;padding:0 10px;font-size:14px;color:var(--text1);background:#fff;-webkit-appearance:none}
+.field .hint{font-size:11px;color:var(--text3);margin-top:2px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg-row{display:flex;gap:4px;margin-top:4px}.seg-stack{display:flex;flex-direction:column;gap:4px}
+.seg{flex:1;padding:9px 4px;border-radius:8px;border:0.5px solid #CBD5E1;background:#fff;font-size:13px;color:var(--text2);cursor:pointer;text-align:center}
+.seg.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px}
+.btn-dark{background:var(--blue-dark)}.btn-outline{width:100%;padding:11px;background:transparent;color:var(--blue);border:1px solid var(--blue);border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px}
+.btn-danger{border-color:var(--danger);color:var(--danger)}
+.hero-center{text-align:center;padding:10px 0 6px}.big-age{font-size:72px;font-weight:700;line-height:1}
+.age-unit{font-size:14px;color:var(--text2);margin-bottom:8px}
+.badge{display:inline-block;padding:5px 16px;border-radius:20px;font-size:13px;font-weight:500}
+.score-bar{margin-bottom:10px}.score-bar-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:3px}
+.score-bar-track{height:8px;background:#E2E8F0;border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;transition:width .7s}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--border)}
+.metric-row:last-child{border-bottom:none}.metric-val{font-weight:600}.metric-unit{font-size:11px;color:var(--text3);font-weight:400}
+.rec-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.rec-row:last-child{border-bottom:none}.rec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.rec-cat{font-size:11px;color:var(--text3);margin-bottom:2px}.rec-text{font-size:13px;line-height:1.5}
+.ai-response{background:#F0F7FF;border-radius:10px;border:0.5px solid rgba(26,111,191,.3);padding:12px;margin-top:8px;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.ai-loading{text-align:center;padding:16px;color:var(--text2);font-size:13px}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.kpi{background:#fff;border-radius:10px;border:0.5px solid var(--border);padding:12px}
+.kpi-label{font-size:11px;color:var(--text3);margin-bottom:4px}.kpi-val{font-size:22px;font-weight:700}
+.ev-table{width:100%;border-collapse:collapse;font-size:12px}
+.ev-table th{color:var(--text3);font-weight:500;padding:4px;text-align:center;border-bottom:1px solid var(--border)}
+.ev-table td{padding:5px 4px;text-align:center;border-bottom:0.5px solid #F1F5F9}
+.ev-table tr.last-row td{background:var(--success-bg)}
+.hist-card{background:#fff;border-radius:14px;border:0.5px solid var(--border);padding:14px;margin-bottom:12px}
+.hist-date{font-size:12px;color:var(--text3);margin-bottom:4px}
+.hist-age-row{display:flex;align-items:baseline;gap:6px;margin-bottom:10px}
+.hist-big{font-size:32px;font-weight:700}.hist-unit{font-size:13px;color:var(--text2)}
+.hist-scores{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+.hist-score-box{background:var(--bg);border-radius:8px;padding:6px;text-align:center}
+.hist-score-val{font-size:16px;font-weight:700}.hist-score-lbl{font-size:10px;color:var(--text3)}
+.hist-meta{font-size:11px;color:var(--text3)}.delete-btn{background:#FEF2F2;border:none;border-radius:8px;padding:7px 10px;font-size:13px;color:var(--danger);cursor:pointer}
+.profile-header{background:linear-gradient(135deg,var(--blue-dark),var(--blue));padding:54px 24px 20px;text-align:center}
+.avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;margin:0 auto 10px}
+.profile-name{font-size:20px;font-weight:600;color:#fff;margin-bottom:2px}
+.profile-email{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px}
+.stat-row{display:flex;background:rgba(255,255,255,.15);border-radius:14px;overflow:hidden}
+.stat-box{flex:1;text-align:center;padding:10px}.stat-box+.stat-box{border-left:0.5px solid rgba(255,255,255,.25)}
+.stat-num{font-size:18px;font-weight:700;color:#fff}.stat-lbl{font-size:10px;color:rgba(255,255,255,.75)}
+.profile-section{background:#fff;border-radius:14px;border:0.5px solid var(--border);padding:16px;margin:12px 16px 0}
+.section-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:14px}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{padding:6px 14px;border-radius:20px;border:0.5px solid var(--border);background:#fff;font-size:13px;color:var(--text2);cursor:pointer}
+.chip.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.info-row:last-child{border-bottom:none}.info-label{font-size:13px;color:var(--text2)}.info-val{font-size:13px;font-weight:500;color:var(--text1)}
+.sign-out-btn{margin:16px;padding:14px;border-radius:12px;border:1px solid var(--danger);color:var(--danger);background:transparent;width:calc(100% - 32px);font-size:15px;font-weight:600;cursor:pointer}
+.version{text-align:center;font-size:11px;color:var(--text3);padding-bottom:8px}
+.empty-state{text-align:center;padding:60px 32px}.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-size:18px;font-weight:600;margin-bottom:6px}.empty-text{font-size:13px;color:var(--text2);line-height:1.6}
+.auth-screen{display:flex;flex-direction:column;min-height:100dvh;background:var(--bg)}
+.auth-form{padding:24px;flex:1}.auth-title{font-size:22px;font-weight:600;margin-bottom:20px}
+.auth-link{color:var(--blue);font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;padding:4px 0}
+.msg-box{padding:12px;border-radius:10px;margin-bottom:12px;font-size:13px;line-height:1.5}
+.tend-box{padding:10px;border-radius:8px;margin-top:10px;font-size:12px;line-height:1.6}
+.score-boxes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.score-box{background:var(--bg);border-radius:8px;padding:8px;text-align:center}
+.score-val{font-size:20px;font-weight:700}.score-lbl{font-size:10px;color:var(--text2);margin-top:2px}
+.install-banner{background:var(--blue-dark);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:12px;flex-shrink:0}
+.install-banner button{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;flex-shrink:0}</style>
 </head>
-<body style="margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#F8FAFC;">
-<div id="root"></div>
+<body>
+<div id="auth-screen" class="auth-screen" style="display:none;">
+  <div class="app-header">
+    <div class="logo-row"><div class="logo-box">♥︎</div><div><div class="logo-title">BioAge</div><div class="logo-sub">CLINICAL FITNESS INDEX</div></div></div>
+    <div class="logo-tags"><span>🔬 Lab</span><span>⚡ Físico</span><span>📈 Longevidad</span></div>
+  </div>
+  <div class="auth-form">
+    <div id="auth-mode-login">
+      <div class="auth-title">Iniciar sesión</div>
+      <div class="field"><label>Nombre</label><input id="login-name" type="text" placeholder="Dr. Diego"></div>
+      <div class="field"><label>Correo</label><input id="login-email" type="email" placeholder="correo@ejemplo.com"></div>
+      <div class="field"><label>Contraseña</label><input id="login-pass" type="password" placeholder="••••••"></div>
+      <div id="auth-msg" class="msg-box" style="display:none;"></div>
+      <button class="btn" onclick="handleLogin()">Entrar</button>
+      <div style="text-align:center;margin-top:14px;"><button class="auth-link" onclick="showAuthMode('register')">¿Primera vez? Crea tu cuenta</button></div>
+    </div>
+    <div id="auth-mode-register" style="display:none;">
+      <div class="auth-title">Crear cuenta</div>
+      <div class="field"><label>Nombre</label><input id="reg-name" type="text" placeholder="Dr. Diego García"></div>
+      <div class="field"><label>Correo</label><input id="reg-email" type="email" placeholder="correo@ejemplo.com"></div>
+      <div class="field"><label>Contraseña</label><input id="reg-pass" type="password" placeholder="Mínimo 6 caracteres"></div>
+      <button class="btn" onclick="handleRegister()">Registrarme</button>
+      <div style="text-align:center;margin-top:14px;"><button class="auth-link" onclick="showAuthMode('login')">← Volver</button></div>
+    </div>
+  </div>
+</div>
+<div id="main-app" style="display:none;flex-direction:column;height:100dvh;">
+  <div class="install-banner" id="install-banner" style="display:none;">
+    <span>📲 Instala BioAge: toca <strong>Compartir</strong> → <strong>Agregar a inicio</strong></span>
+    <button onclick="document.getElementById('install-banner').style.display='none'">✕</button>
+  </div>
+  <div id="tab-eval" class="screen active" style="flex-direction:column;">
+    <div class="step-nav" id="step-nav">
+      <button class="step-btn active" onclick="goStep(0)">Perfil</button>
+      <button class="step-btn" onclick="goStep(1)">Lab</button>
+      <button class="step-btn" onclick="goStep(2)">Físico</button>
+      <button class="step-btn" onclick="goStep(3)">Vida</button>
+      <button class="step-btn" onclick="goStep(4)">Resultado</button>
+      <button class="step-btn" onclick="goStep(5)">Evolución</button>
+    </div>
+    <div class="scroll pad" id="eval-content"></div>
+  </div>
+  <div id="tab-hist" class="screen" style="flex-direction:column;">
+    <div class="scroll pad" id="hist-content" style="padding-top:16px;"></div>
+  </div>
+  <div id="tab-perfil" class="screen" style="flex-direction:column;">
+    <div class="scroll" id="perfil-content"></div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tb-eval" onclick="showTab('eval')"><span class="tab-icon">🧬</span><span class="tab-label">Evaluación</span></button>
+    <button class="tab-btn" id="tb-hist" onclick="showTab('hist')"><span class="tab-icon">📋</span><span class="tab-label">Historial</span></button>
+    <button class="tab-btn" id="tb-perfil" onclick="showTab('perfil')"><span class="tab-icon">👤</span><span class="tab-label">Perfil</span></button>
+  </div>
+</div>
 <script>
-// BioAge PWA v2.0 - Cargando app completa...
-document.getElementById('root').innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#0D4F8C,#1A6FBF);"><svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 512 512\' width=\'80\' height=\'80\' style=\'margin-bottom:16px\'><rect width=\'512\' height=\'512\' rx=\'112\' fill=\'rgba(255,255,255,0.2)\'/><polyline points=\'48,256 128,256 168,148 208,364 240,204 272,256 320,256 358,172 396,318 430,256 464,256\' fill=\'none\' stroke=\'white\' stroke-width=\'22\' stroke-linecap=\'round\'/></svg><div style=\'color:white;font-size:32px;font-weight:700\'>BioAge</div><div style=\'color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:3px;margin-top:6px\'>CLINICAL FITNESS INDEX</div><div style=\'margin-top:24px;color:rgba(255,255,255,0.6);font-size:13px\'>Versión completa disponible en claude.ai</div></div>';
-</script>
+let currentUser=null,currentStep=0,formData={},lastResult=null,notifOn=false,reminderDays=30;
+const DEFAULT={edad:'',sexo:'',peso:'',talla:'',cintura:'',glucosa:'',hba1c:'',colTotal:'',ldl:'',hdl:'',trig:'',creatinina:'',pcr:'',albumina:'',pas:'',pad:'',prension:'',pantorrilla:'',marcha:'',equilibrio:'',chairstand:'',sueno:'',actividad:'0',tabaco:'0',alcohol:'0'};
+function handleLogin(){const name=document.getElementById('login-name').value.trim(),email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-pass').value;if(!name||!email||!pass){showAuthMsg('Completa todos los campos.',true);return;}const users=JSON.parse(localStorage.getItem('bioage_users')||'{}');if(users[email]&&users[email].pass!==pass){showAuthMsg('Contraseña incorrecta.',true);return;}if(!users[email]){users[email]={name,pass};localStorage.setItem('bioage_users',JSON.stringify(users));}currentUser={email,name:users[email].name};localStorage.setItem('bioage_session',JSON.stringify(currentUser));startApp();}
+function handleRegister(){const name=document.getElementById('reg-name').value.trim(),email=document.getElementById('reg-email').value.trim(),pass=document.getElementById('reg-pass').value;if(!name||!email||!pass){showAuthMsg('Completa todos los campos.',true);return;}if(pass.length<6){showAuthMsg('Contraseña mínimo 6 caracteres.',true);return;}const users=JSON.parse(localStorage.getItem('bioage_users')||'{}');if(users[email]){showAuthMsg('Correo ya registrado.',true);return;}users[email]={name,pass};localStorage.setItem('bioage_users',JSON.stringify(users));currentUser={email,name};localStorage.setItem('bioage_session',JSON.stringify(currentUser));startApp();}
+function showAuthMsg(msg,isErr){const el=document.getElementById('auth-msg');el.style.display='block';el.style.background=isErr?'#FEF2F2':'#EBF4FF';el.style.color=isErr?'#C0392B':'#0D4F8C';el.textContent=msg;}
+function showAuthMode(mode){document.getElementById('auth-mode-login').style.display=mode==='login'?'block':'none';document.getElementById('auth-mode-register').style.display=mode==='register'?'block':'none';}
+function signOut(){if(!confirm('¿Cerrar sesión?'))return;localStorage.removeItem('bioage_session');location.reload();}
+function storageKey(s){return 'bioage_'+currentUser.email+'_'+s;}
+function loadEvals(){return JSON.parse(localStorage.getItem(storageKey('evals'))||'[]');}
+function saveEval(ev){const list=loadEvals();list.push(ev);localStorage.setItem(storageKey('evals'),JSON.stringify(list));}
+function deleteEval(id){localStorage.setItem(storageKey('evals'),JSON.stringify(loadEvals().filter(e=>e.id!==id)));}
+function makeEval(form,result){const now=new Date();return{id:'eval_'+now.getTime(),fecha:now.toISOString(),fechaLabel:now.toLocaleDateString('es-MX',{year:'numeric',month:'short',day:'numeric'}),form:{...form},result:{...result}};}
+function n(v){return parseFloat(v)||0;}
+function calcBioAge(f){
+  const edad=n(f.edad),sexo=f.sexo,peso=n(f.peso),talla=n(f.talla),cintura=n(f.cintura);
+  const glucosa=n(f.glucosa),hba1c=n(f.hba1c),ldl=n(f.ldl),hdl=n(f.hdl),trig=n(f.trig);
+  const pcr=n(f.pcr),albumina=n(f.albumina),pas=n(f.pas),pad=n(f.pad);
+  const prension=n(f.prension),pantorrilla=n(f.pantorrilla),marcha=n(f.marcha),equilibrio=n(f.equilibrio),chairstand=n(f.chairstand);
+  const sueno=n(f.sueno),actividad=parseInt(f.actividad)||0,tabaco=parseInt(f.tabaco)||0,alcohol=parseInt(f.alcohol)||0;
+  const imc=peso&&talla?peso/((talla/100)**2):0;
+  const hdlMin=sexo==='f'?50:40,prensionMin=sexo==='f'?20:32,csRef=sexo==='f'?11:12,cinturaMax=sexo==='f'?88:102;
+  let dL=0,dF=0,dV=0;
+  if(glucosa>0)dL+=glucosa<100?0:glucosa<126?2:5;if(hba1c>0)dL+=hba1c<5.7?0:hba1c<6.5?2:5;
+  if(ldl>0)dL+=ldl<100?0:ldl<130?1:ldl<160?2:4;if(hdl>0)dL+=hdl>=hdlMin+10?-1:hdl>=hdlMin?0:2;
+  if(trig>0)dL+=trig<150?0:trig<200?1:3;if(pcr>0)dL+=pcr<1?0:pcr<3?2:5;
+  if(albumina>0)dL+=albumina>=4?-1:albumina>=3.5?0:3;if(pas>0)dL+=pas<120&&pad<80?0:pas<130?1:pas<140?2:4;
+  if(imc>0)dF+=imc<18.5?1:imc<25?0:imc<30?2:4;if(cintura>0)dF+=cintura<cinturaMax-10?-1:cintura<cinturaMax?0:2;
+  if(prension>0)dF+=prension>=prensionMin+10?-2:prension>=prensionMin?0:3;
+  if(pantorrilla>0)dF+=pantorrilla>=36?-1:pantorrilla>=34?0:2;
+  if(marcha>0)dF+=marcha<=3?-2:marcha<=4?0:marcha<=6?2:4;
+  if(equilibrio>0)dF+=equilibrio>=30?-2:equilibrio>=20?0:equilibrio>=10?2:4;
+  if(chairstand>0)dF+=chairstand>=csRef+4?-2:chairstand>=csRef?0:3;
+  if(sueno>0)dV+=sueno>=7&&sueno<=9?0:sueno>=6&&sueno<=10?1:3;
+  dV+=[4,2,0,-2][actividad]??0;dV+=[0,1,5][tabaco]??0;dV+=[0,0,3][alcohol]??0;
+  const clamp=v=>Math.max(0,Math.min(100,v));
+  return{bioAge:Math.round(edad+dL+dF+dV),diff:Math.round(dL+dF+dV),labScore:clamp(100-Math.round((dL/20)*100)),fisScore:clamp(100-Math.round((dF/20)*100)),vidScore:clamp(100-Math.round((dV/20)*100)),imc,hdlMin,prensionMin,csRef};}
+function diffColor(d){return d>1?'var(--danger)':d<-1?'var(--blue)':'var(--warn)';}
+function diffBg(d){return d>1?'var(--danger-bg)':d<-1?'var(--success-bg)':'var(--neutral)';}
+function scoreColor(s){return s>=80?'var(--blue)':s>=60?'var(--warn)':'var(--danger)';}
+function field(id,label,placeholder,hint=''){return '<div class="field"><label>'+label+'</label><input id="f_'+id+'" type="number" inputmode="decimal" placeholder="'+placeholder+'" value="'+(formData[id]||'')+'" oninput="formData[\''+id+'\']=this.value"><div class="hint">'+hint+'</div></div>';}
+function seg(id,opts){return '<div class="seg-row">'+opts.map(([v,l])=>'<div class="seg '+(formData[id]===v?'active':'')+'" onclick="setSeg(\''+id+'\',\''+v+'\',this)">'+l+'</div>').join('')+'</div>';}
+function segStack(id,opts){return '<div class="seg-stack">'+opts.map(([v,l])=>'<div class="seg '+(formData[id]===v?'active':'')+'" onclick="setSeg(\''+id+'\',\''+v+'\',this)">'+l+'</div>').join('')+'</div>';}
+function setSeg(id,val,el){formData[id]=val;el.closest('.seg-row,.seg-stack').querySelectorAll('.seg').forEach(s=>s.classList.remove('active'));el.classList.add('active');}
+function scoreBar(label,score){const c=scoreColor(score);return '<div class="score-bar"><div class="score-bar-row"><span>'+label+'</span><span style="font-weight:600;color:'+c+'">'+score+'/100</span></div><div class="score-bar-track"><div class="score-bar-fill" style="width:'+score+'%;background:'+c+'"></div></div></div>';}
+function showTab(tab){['eval','hist','perfil'].forEach(t=>{document.getElementById('tab-'+t).classList.toggle('active',t===tab);document.getElementById('tb-'+t).classList.toggle('active',t===tab);});if(tab==='hist')renderHist();if(tab==='perfil')renderPerfil();}
+function goStep(s){currentStep=s;document.querySelectorAll('.step-btn').forEach((b,i)=>b.classList.toggle('active',i===s));renderStep();}
+function renderStep(){const c=document.getElementById('eval-content');if(currentStep===0)c.innerHTML=stepPerfil();else if(currentStep===1)c.innerHTML=stepLab();else if(currentStep===2)c.innerHTML=stepFisico();else if(currentStep===3)c.innerHTML=stepVida();else if(currentStep===4)c.innerHTML=stepResultado();else if(currentStep===5)c.innerHTML=stepEvolucion();c.scrollTop=0;}
+function stepPerfil(){return '<div style="padding-top:12px;"><div class="card"><div class="card-title">👤 Datos generales</div><div class="row2">'+field('edad','Edad (años)','45')+'<div class="field"><label>Sexo biológico</label>'+seg('sexo',[['m','♂ Masc.'],['f','♀ Fem.']])+'</div></div><div class="row2">'+field('peso','Peso (kg)','70')+field('talla','Talla (cm)','170')+'</div>'+field('cintura','Cintura (cm)','88','A nivel del ombligo')+'</div><button class="btn" onclick="goStep(1)">Siguiente → Laboratorio</button></div>';}
+function stepLab(){return '<div style="padding-top:12px;"><div class="card"><div class="card-title">🩸 Glucosa y HbA1c</div><div class="row2">'+field('glucosa','Glucosa (mg/dL)','90','Normal: 70-99')+field('hba1c','HbA1c (%)','5.4','<5.7%')+'</div></div><div class="card"><div class="card-title">💧 Lípidos</div><div class="row2">'+field('colTotal','Col. total','180','<200')+field('ldl','LDL (mg/dL)','100','<100')+'</div><div class="row2">'+field('hdl','HDL (mg/dL)','55','>40♂ >50♀')+field('trig','Triglicéridos','120','<150')+'</div></div><div class="card"><div class="card-title">⚗️ Otros marcadores</div><div class="row2">'+field('creatinina','Creatinina','0.9','0.6-1.2')+field('pcr','PCR-us (mg/L)','0.5','<1')+'</div><div class="row2">'+field('albumina','Albúmina (g/dL)','4.2','3.5-5')+field('pas','PA sistólica','120','<120')+'</div>'+field('pad','PA diastólica','80','<80')+'</div><button class="btn" onclick="goStep(2)">Siguiente → Físico</button><button class="btn-outline" onclick="goStep(0)">← Atrás</button></div>';}
+function stepFisico(){return '<div style="padding-top:12px;"><div class="card"><div class="card-title">💪 Fuerza y composición</div>'+field('prension','Fuerza de prensión (kg)','35','♂>32 ♀>20')+field('pantorrilla','Perímetro pantorrilla (cm)','36','>34 cm')+'</div><div class="card"><div class="card-title">🏃 Tests funcionales</div>'+field('marcha','Velocidad marcha 4m (seg)','3.5','<4 seg')+field('equilibrio','Equilibrio monopodal (seg)','25','>20 seg')+field('chairstand','Chair Stand 30s (reps)','14','♂>12 ♀>11')+'</div><button class="btn" onclick="goStep(3)">Siguiente → Estilo de vida</button><button class="btn-outline" onclick="goStep(1)">← Atrás</button></div>';}
+function stepVida(){return '<div style="padding-top:12px;"><div class="card"><div class="card-title">😴 Sueño</div>'+field('sueno','Horas de sueño','7','Óptimo: 7-9 h')+'</div><div class="card"><div class="card-title">🏋️ Actividad física</div><label style="font-size:12px;color:var(--text2);margin-bottom:6px;display:block;">Nivel de actividad</label>'+segStack('actividad',[['0','Sedentario'],['1','Ligeramente activo (1-2 d/sem)'],['2','Moderadamente activo (3-4 d/sem)'],['3','Muy activo (5+ d/sem)']])+'</div><div class="card"><div class="card-title">🚭 Hábitos</div><label style="font-size:12px;color:var(--text2);margin-bottom:6px;display:block;">Tabaquismo</label>'+segStack('tabaco',[['0','No fumador'],['1','Ex-fumador'],['2','Fumador activo']])+'<label style="font-size:12px;color:var(--text2);margin:12px 0 6px;display:block;">Alcohol</label>'+segStack('alcohol',[['0','No consume'],['1','Ocasional/moderado'],['2','Frecuente/excesivo']])+'</div><button class="btn" onclick="calcular()">🧬 Calcular edad biológica</button><button class="btn-outline" onclick="goStep(2)">← Atrás</button></div>';}
+function calcular(){const r=calcBioAge(formData);lastResult=r;const ev=makeEval(formData,r);saveEval(ev);goStep(4);}
+function stepResultado(){
+  if(!lastResult)return '<div class="empty-state"><div class="empty-icon">🧬</div><div class="empty-title">Sin resultado</div><div class="empty-text">Completa los pasos anteriores.</div><button class="btn" style="margin-top:16px" onclick="goStep(0)">Comenzar</button></div>';
+  const r=lastResult,f=formData,diff=r.bioAge-n(f.edad),dc=diffColor(diff),db=diffBg(diff);
+  const diffTxt=diff>1?'+'+diff+' años vs cronológica':diff<-1?diff+' años vs cronológica':'Igual a cronológica';
+  const metrics=[['IMC',r.imc.toFixed(1),'kg/m²',r.imc>=18.5&&r.imc<25?'var(--blue)':r.imc<30?'var(--warn)':'var(--danger)'],['Glucosa',f.glucosa||'--','mg/dL',n(f.glucosa)<100?'var(--blue)':n(f.glucosa)<126?'var(--warn)':'var(--danger)'],['HbA1c',f.hba1c||'--','%',n(f.hba1c)<5.7?'var(--blue)':n(f.hba1c)<6.5?'var(--warn)':'var(--danger)'],['LDL',f.ldl||'--','mg/dL',n(f.ldl)<100?'var(--blue)':n(f.ldl)<130?'var(--warn)':'var(--danger)'],['HDL',f.hdl||'--','mg/dL',n(f.hdl)>=r.hdlMin?'var(--blue)':'var(--danger)'],['PCR-us',f.pcr||'--','mg/L',n(f.pcr)<1?'var(--blue)':n(f.pcr)<3?'var(--warn)':'var(--danger)'],['PA',f.pas&&f.pad?f.pas+'/'+f.pad:'--','mmHg',n(f.pas)<120&&n(f.pad)<80?'var(--blue)':n(f.pas)<140?'var(--warn)':'var(--danger)'],['Prensión',f.prension||'--','kg',n(f.prension)>=r.prensionMin?'var(--blue)':'var(--danger)'],['Pantorrilla',f.pantorrilla||'--','cm',n(f.pantorrilla)>=34?'var(--blue)':'var(--warn)']];
+  const recs=[];
+  if(n(f.glucosa)>=100||n(f.hba1c)>=5.7)recs.push(['Metabolismo','var(--danger)','Reduce azúcares y CHO refinados. Meta glucosa <100 mg/dL.']);
+  if(n(f.ldl)>=130)recs.push(['Lípidos','var(--warn)','Fibra soluble 10g/día. Meta LDL <100.']);
+  if(n(f.pcr)>=1)recs.push(['Inflamación','var(--danger)','Dieta mediterránea + omega-3 2g/día.']);
+  if(n(f.pas)>=130)recs.push(['PA','var(--danger)','Reduce sodio, 150 min/sem aeróbico. Meta <120/80.']);
+  if(n(f.prension)<r.prensionMin)recs.push(['Fuerza','var(--danger)','Resistencia 3x/sem. Proteína 1.5-2g/kg/día.']);
+  if(parseInt(f.actividad)<=1)recs.push(['Actividad','var(--warn)','150 min/sem reduce edad biológica 3-5 años.']);
+  if(parseInt(f.tabaco)===2)recs.push(['Tabaco','var(--danger)','El cese tabáquico es el factor más envejecedor.']);
+  if(diff<=-2)recs.push(['¡Excelente!','var(--blue)','Edad biológica menor a la cronológica. ¡Sigue así!']);
+  if(recs.length===0)recs.push(['Óptimo','var(--blue)','Marcadores saludables. Repite en 6-12 meses.']);
+  return '<div style="padding-top:12px;"><div class="card"><div class="hero-center"><div style="font-size:13px;color:var(--text2);margin-bottom:6px">Edad biológica estimada</div><div class="big-age" style="color:'+dc+'">'+r.bioAge+'</div><div class="age-unit">años</div><span class="badge" style="background:'+db+';color:'+dc+'">'+diffTxt+'</span></div></div><div class="card"><div class="card-title">🎯 Radar de categorías</div>'+radarSVG(r.labScore,r.fisScore,r.vidScore)+'<div class="score-boxes">'+[['Lab',r.labScore],['Físico',r.fisScore],['Vida',r.vidScore]].map(([l,s])=>'<div class="score-box"><div class="score-val" style="color:'+scoreColor(s)+'">'+s+'</div><div class="score-lbl">'+l+'</div></div>').join('')+'</div></div><div class="card"><div class="card-title">📈 Puntaje por categoría</div>'+scoreBar('Laboratorio',r.labScore)+scoreBar('Funcionalidad física',r.fisScore)+scoreBar('Estilo de vida',r.vidScore)+'</div><div class="card"><div class="card-title">🔬 Tus marcadores</div>'+metrics.map(([name,val,u,c])=>'<div class="metric-row"><span>'+name+'</span><span class="metric-val" style="color:'+c+'">'+val+' <span class="metric-unit">'+u+'</span></span></div>').join('')+'</div><div class="card"><div class="card-title">💡 Recomendaciones</div>'+recs.map(([c,col,t],i)=>'<div class="rec-row" style="'+(i===recs.length-1?'border:none':'')+'"><div class="rec-dot" style="background:'+col+'"></div><div><div class="rec-cat">'+c+'</div><div class="rec-text">'+t+'</div></div></div>').join('')+'</div><div class="card"><div class="card-title">🤖 Informe clínico con IA</div><div id="ai-panel"><button class="btn" onclick="getAIReport()">✨ Generar informe con IA</button></div></div><button class="btn btn-dark" onclick="exportPDF()">📄 Exportar / Imprimir reporte</button><button class="btn" style="background:var(--blue-dark);margin-top:8px" onclick="goStep(5)">📈 Ver evolución histórica</button><button class="btn-outline" onclick="recalcular()">Recalcular desde cero</button></div>';}
+function recalcular(){formData={...DEFAULT};lastResult=null;goStep(0);}
+function stepEvolucion(){
+  const evs=loadEvals();
+  if(evs.length===0)return '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">Sin datos aún</div><div class="empty-text">Realiza tu primera evaluación para ver tu evolución aquí.</div></div>';
+  const history=evs.map(ev=>({fecha:ev.fechaLabel,cron:parseFloat(ev.form.edad)||0,bio:ev.result.bioAge,lab:ev.result.labScore,fis:ev.result.fisScore,vid:ev.result.vidScore}));
+  const first=history[0],last=history[history.length-1],mejora=first.bio-last.bio,ok=last.bio<=last.cron;
+  return '<div style="padding-top:12px;"><div class="kpi-row"><div class="kpi"><div class="kpi-label">Edad biológica actual</div><div class="kpi-val" style="color:'+(last.bio<=last.cron?'var(--blue)':'var(--danger)')+'">'+last.bio+' años</div></div><div class="kpi"><div class="kpi-label">Mejora total</div><div class="kpi-val" style="color:'+(mejora>0?'var(--blue)':'var(--warn)')+'">'+(mejora>0?'−'+mejora+' años':'Sin cambio')+'</div></div></div><div class="card"><div class="card-title">📉 Evolución biológica</div>'+lineChartSVG(history)+'<div style="display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:11px;color:var(--text2)"><span>🔵 Biológica</span><span style="color:var(--text3)">- - Cronológica</span></div><div class="tend-box" style="background:'+(ok?'var(--success-bg)':'var(--danger-bg)')+';color:'+(ok?'var(--blue-dark)':'var(--danger)')+'">'+( ok?'✅ Tu edad biológica está por debajo de la cronológica.':'⚠️ Tu edad biológica supera la cronológica.')+'</div></div><div class="card"><div class="card-title">🗓️ Historial</div><table class="ev-table"><thead><tr><th>Fecha</th><th>Cron.</th><th>Biol.</th><th>Δ</th><th>Lab</th><th>Fís.</th><th>Vida</th></tr></thead><tbody>'+history.map((d,i)=>{const delta=d.bio-d.cron;return'<tr class="'+(i===history.length-1?'last-row':'')+'"><td style="font-size:10px;text-align:left">'+d.fecha+'</td><td style="color:var(--text3)">'+d.cron+'</td><td style="color:'+(delta<=0?'var(--blue)':'var(--danger)')+';font-weight:600">'+d.bio+'</td><td style="color:'+(delta<=0?'var(--blue)':'var(--danger)')+'">'+( delta>0?'+'+delta:delta)+'</td><td style="color:'+scoreColor(d.lab)+'">'+d.lab+'</td><td style="color:'+scoreColor(d.fis)+'">'+d.fis+'</td><td style="color:'+scoreColor(d.vid)+'">'+d.vid+'</td></tr>';}).join('')+'</tbody></table></div><button class="btn-outline" onclick="goStep(4)">← Resultado</button></div>';}
+function radarSVG(lab,fis,vid){const cx=110,cy=110,r=75,angles=[-90,30,150].map(d=>d*Math.PI/180),vals=[lab/100,fis/100,vid/100],labels=['Laboratorio','Físico','Estilo de vida'],grids=[.25,.5,.75,1];const pts=scale=>angles.map(a=>cx+Math.cos(a)*r*scale+','+( cy+Math.sin(a)*r*scale)).join(' ');const dataPts=angles.map((a,i)=>cx+Math.cos(a)*r*vals[i]+','+(cy+Math.sin(a)*r*vals[i])).join(' ');return '<svg viewBox="0 0 220 230" style="width:100%;max-height:200px;">'+grids.map(g=>'<polygon points="'+pts(g)+'" fill="none" stroke="#E2E8F0" stroke-width="1"/>').join('')+angles.map(a=>'<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(a)*r)+'" y2="'+(cy+Math.sin(a)*r)+'" stroke="#E2E8F0" stroke-width="1"/>').join('')+'<polygon points="'+dataPts+'" fill="rgba(26,111,191,.15)" stroke="#1A6FBF" stroke-width="2"/>'+angles.map((a,i)=>'<circle cx="'+(cx+Math.cos(a)*r*vals[i])+'" cy="'+(cy+Math.sin(a)*r*vals[i])+'" r="5" fill="white" stroke="#1A6FBF" stroke-width="2"/>').join('')+angles.map((a,i)=>'<text x="'+(cx+Math.cos(a)*(r+20))+'" y="'+(cy+Math.sin(a)*(r+18))+'" text-anchor="middle" font-size="10" fill="#64748B" font-family="sans-serif">'+labels[i]+'</text>').join('')+'</svg>';}
+function lineChartSVG(data){if(data.length<2)return'';const W=320,H=140,pad={t:16,r:16,b:36,l:36},iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;const allV=[...data.map(d=>d.bio),...data.map(d=>d.cron)];const minV=Math.min(...allV)-3,maxV=Math.max(...allV)+3,xS=iW/(data.length-1);const yS=v=>iH-((v-minV)/(maxV-minV))*iH;const bioP=data.map((d,i)=>pad.l+i*xS+','+(pad.t+yS(d.bio))).join(' '),cronP=data.map((d,i)=>pad.l+i*xS+','+(pad.t+yS(d.cron))).join(' ');return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;"><polyline points="'+cronP+'" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,3"/><polyline points="'+bioP+'" fill="none" stroke="#1A6FBF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+data.map((d,i)=>'<circle cx="'+(pad.l+i*xS)+'" cy="'+(pad.t+yS(d.bio))+'" r="4" fill="white" stroke="#1A6FBF" stroke-width="2"/><text x="'+(pad.l+i*xS)+'" y="'+(pad.t+yS(d.bio)-8)+'" text-anchor="middle" font-size="9" fill="#1A6FBF" font-weight="bold" font-family="sans-serif">'+d.bio+'</text><text x="'+(pad.l+i*xS)+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="#94A3B8" font-family="sans-serif">'+d.fecha+'</text>').join('')+'</svg>';}
+async function getAIReport(){const panel=document.getElementById('ai-panel');panel.innerHTML='<div class="ai-loading">🧠 Analizando con IA…</div>';const r=lastResult,f=formData;const prompt='Eres un médico especialista en medicina anti-envejecimiento. Genera un informe clínico conciso en español con: 1) Interpretación de la edad biológica ('+r.bioAge+' vs cronológica '+f.edad+'), 2) Los 3 hallazgos más relevantes, 3) Plan de acción con 4-5 recomendaciones específicas (incluye dosis/metas), 4) Pronóstico. Datos: Sexo '+(f.sexo==='m'?'M':'F')+', Edad '+f.edad+', IMC '+r.imc.toFixed(1)+', Glucosa '+f.glucosa+', HbA1c '+f.hba1c+'%, LDL '+f.ldl+', HDL '+f.hdl+', TG '+f.trig+', PCR '+f.pcr+', PA '+f.pas+'/'+f.pad+', Prensión '+f.prension+'kg, Pantorrilla '+f.pantorrilla+'cm, Marcha '+f.marcha+'s, Equilibrio '+f.equilibrio+'s, ChairStand '+f.chairstand+', Sueño '+f.sueno+'h. Scores: Lab '+r.labScore+' Fís '+r.fisScore+' Vida '+r.vidScore+'.';try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});const data=await res.json();const txt=data.content?.map(b=>b.text||'').join('')||'Sin respuesta.';panel.innerHTML='<div class="ai-response">'+txt+'</div><button class="btn-outline" style="margin-top:8px" onclick="document.getElementById(\'ai-panel\').innerHTML=\'<button class=btn onclick=getAIReport()>✨ Regenerar</button>\'">Regenerar</button>';}catch{panel.innerHTML='<div style="color:var(--danger);font-size:13px">Error al conectar con la IA.</div>';}}
+function exportPDF(){const r=lastResult,f=formData;if(!r){alert('Primero calcula tu edad biológica.');return;}const diff=r.bioAge-(parseFloat(f.edad)||0),dc=diff>0?'#C0392B':diff<0?'#1A6FBF':'#D97706';const html='<html><head><meta charset="utf-8"><title>BioAge Reporte</title><style>body{font-family:Arial,sans-serif;padding:2rem;color:#0F172A;max-width:700px;margin:0 auto}h1{color:#0D4F8C}h2{color:#1A6FBF;font-size:16px;margin:1.2rem 0 .5rem}.hero{background:#EBF4FF;border-radius:12px;padding:1rem;text-align:center;margin:1rem 0}.big{font-size:56px;font-weight:700;color:'+dc+';line-height:1}table{width:100%;border-collapse:collapse;font-size:13px}td{padding:6px 4px;border-bottom:1px solid #eee}.bar{height:10px;background:#eee;border-radius:5px;margin:3px 0}.bar-fill{height:100%;border-radius:5px}footer{margin-top:2rem;font-size:11px;color:#aaa;border-top:1px solid #eee;padding-top:.5rem}</style></head><body><h1>🧬 BioAge — Reporte clínico</h1><p style="color:#888;font-size:13px">Generado el '+new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})+'</p><div class="hero"><div style="font-size:13px;color:#555">Edad biológica estimada</div><div class="big">'+r.bioAge+'</div><div style="font-size:13px;color:#555">años · Cronológica: '+f.edad+' años</div></div><h2>Puntajes</h2>'+[['Laboratorio',r.labScore],['Físico',r.fisScore],['Estilo de vida',r.vidScore]].map(([l,s])=>'<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>'+l+'</span><span>'+s+'/100</span></div><div class="bar"><div class="bar-fill" style="width:'+s+'%;background:'+(s>=80?'#1A6FBF':s>=60?'#D97706':'#C0392B')+'"></div></div></div>').join('')+'<h2>Marcadores</h2><table><tr><td>Glucosa</td><td>'+f.glucosa+' mg/dL</td><td>HbA1c</td><td>'+f.hba1c+'%</td></tr><tr><td>LDL</td><td>'+f.ldl+' mg/dL</td><td>HDL</td><td>'+f.hdl+' mg/dL</td></tr><tr><td>Triglicéridos</td><td>'+f.trig+' mg/dL</td><td>PCR-us</td><td>'+f.pcr+' mg/L</td></tr><tr><td>PA</td><td>'+f.pas+'/'+f.pad+' mmHg</td><td>IMC</td><td>'+r.imc.toFixed(1)+' kg/m²</td></tr><tr><td>Prensión</td><td>'+f.prension+' kg</td><td>Pantorrilla</td><td>'+f.pantorrilla+' cm</td></tr></table><footer>BioAge Clinical Fitness Index · Reporte orientativo.</footer></body></html>';const w=window.open('','_blank');w.document.write(html);w.document.close();w.print();}
+function renderHist(){const evs=[...loadEvals()].reverse(),c=document.getElementById('hist-content');if(evs.length===0){c.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:20px;font-weight:600">📋 Historial</div></div><div class="empty-state"><div class="empty-icon">🗂️</div><div class="empty-title">Sin evaluaciones</div><div class="empty-text">Tus evaluaciones se guardan automáticamente.</div></div>';return;}c.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div style="font-size:20px;font-weight:600">📋 Historial</div><button class="btn-outline btn-danger" style="width:auto;padding:6px 12px;font-size:12px;margin:0" onclick="clearAll()">Borrar todo</button></div>'+evs.map(ev=>{const diff=ev.result.bioAge-(parseFloat(ev.form.edad)||0),dc=diffColor(diff),db=diffBg(diff);return'<div class="hist-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="hist-date">'+ev.fechaLabel+'</div><div class="hist-age-row"><span class="hist-big" style="color:'+dc+'">'+ev.result.bioAge+'</span><span class="hist-unit">años bio.</span><span class="badge" style="background:'+db+';color:'+dc+';font-size:11px">'+(diff>0?'+'+diff:diff)+' vs cron.</span></div></div><button class="delete-btn" onclick="delEval(\''+ev.id+'\')">✕</button></div><div class="hist-scores">'+[['Lab',ev.result.labScore],['Físico',ev.result.fisScore],['Vida',ev.result.vidScore]].map(([l,s])=>'<div class="hist-score-box"><div class="hist-score-val" style="color:'+scoreColor(s)+'">'+s+'</div><div class="hist-score-lbl">'+l+'</div></div>').join('')+'</div><div class="hist-meta">Edad cronológica: '+ev.form.edad+' años · Sexo: '+(ev.form.sexo==='m'?'Masculino':'Femenino')+'</div></div>';}).join('');}
+function delEval(id){if(!confirm('¿Eliminar esta evaluación?'))return;deleteEval(id);renderHist();}
+function clearAll(){if(!confirm('¿Borrar TODAS las evaluaciones?'))return;localStorage.removeItem(storageKey('evals'));renderHist();}
+function renderPerfil(){const u=currentUser,evsCount=loadEvals().length,initials=u.name.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase();document.getElementById('perfil-content').innerHTML='<div class="profile-header"><div class="avatar">'+initials+'</div><div class="profile-name">'+u.name+'</div><div class="profile-email">'+u.email+'</div><div class="stat-row"><div class="stat-box"><div class="stat-num">'+evsCount+'</div><div class="stat-lbl">Evaluaciones</div></div><div class="stat-box"><div class="stat-num">'+(notifOn?'Sí':'No')+'</div><div class="stat-lbl">Recordatorios</div></div><div class="stat-box"><div class="stat-num">'+reminderDays+'d</div><div class="stat-lbl">Frecuencia</div></div></div></div><div class="profile-section"><div class="section-title">🔔 Recordatorios</div><div style="display:flex;align-items:center;gap:12px"><div style="flex:1"><b style="font-size:14px;font-weight:500;display:block;margin-bottom:2px">Activar recordatorios</b><span style="font-size:12px;color:var(--text3)">Te avisamos cuando sea momento de reevaluarte</span></div><button onclick="toggleNotif()" style="width:48px;height:28px;border-radius:14px;background:'+(notifOn?'rgba(26,111,191,.5)':'#E2E8F0')+';border:none;cursor:pointer;position:relative;flex-shrink:0"><span style="position:absolute;width:22px;height:22px;border-radius:50%;background:'+(notifOn?'#1A6FBF':'#fff')+';top:3px;left:'+(notifOn?'23':'3')+'px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)"></span></button></div>'+(notifOn?'<div style="margin-top:14px"><div style="font-size:13px;color:var(--text2);margin-bottom:8px">Cada cuántos días recordar</div><div class="chip-row">'+[14,30,60,90].map(d=>'<div class="chip '+(reminderDays===d?'active':'')+'" onclick="setReminder('+d+',this)">'+d+' días</div>').join('')+'</div></div>':'')+'</div><div class="profile-section"><div class="section-title">ℹ️ Cuenta</div><div class="info-row"><span class="info-label">Correo</span><span class="info-val">'+u.email+'</span></div><div class="info-row"><span class="info-label">Evaluaciones guardadas</span><span class="info-val">'+evsCount+'</span></div></div><button class="sign-out-btn" onclick="signOut()">Cerrar sesión</button><div class="version">BioAge v2.0 · Clinical Fitness Index</div>';}
+function toggleNotif(){notifOn=!notifOn;if(notifOn&&'Notification' in window){Notification.requestPermission().then(p=>{if(p!=='granted')notifOn=false;renderPerfil();});}else renderPerfil();}
+function setReminder(days,el){reminderDays=days;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');}
+function checkInstallBanner(){const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=window.navigator.standalone===true;if(isIOS&&!isStandalone)document.getElementById('install-banner').style.display='flex';}
+function startApp(){document.getElementById('auth-screen').style.display='none';document.getElementById('main-app').style.display='flex';formData={...DEFAULT};checkInstallBanner();renderStep();}
+window.addEventListener('DOMContentLoaded',()=>{const session=localStorage.getItem('bioage_session');if(session){currentUser=JSON.parse(session);startApp();}else{document.getElementById('auth-screen').style.display='flex';}});</script>
 </body>
 </html>
