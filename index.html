@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BioAge">
@@ -11,18 +11,12 @@
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="manifest" href="manifest.json">
 <title>BioAge — Clinical Fitness Index</title>
-<script>
-// Redirigir a la app completa desde GitHub Pages
-// El HTML completo de la PWA va aquí
-window.location.href = window.location.href;
-</script>
 </head>
-<body style="margin:0;background:#0D4F8C;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;font-family:-apple-system,sans-serif;">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="80" height="80" style="margin-bottom:16px">
-  <rect width="512" height="512" rx="112" fill="rgba(255,255,255,0.2)"/>
-  <polyline points="48,256 128,256 168,148 208,364 240,204 272,256 320,256 358,172 396,318 430,256 464,256" fill="none" stroke="white" stroke-width="22" stroke-linecap="round"/>
-</svg>
-<div style="color:white;font-size:28px;font-weight:700;letter-spacing:-0.5px">BioAge</div>
-<div style="color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:3px;margin-top:4px">CARGANDO...</div>
+<body style="margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#F8FAFC;">
+<div id="root"></div>
+<script>
+// BioAge PWA v2.0 - Cargando app completa...
+document.getElementById('root').innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#0D4F8C,#1A6FBF);"><svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 512 512\' width=\'80\' height=\'80\' style=\'margin-bottom:16px\'><rect width=\'512\' height=\'512\' rx=\'112\' fill=\'rgba(255,255,255,0.2)\'/><polyline points=\'48,256 128,256 168,148 208,364 240,204 272,256 320,256 358,172 396,318 430,256 464,256\' fill=\'none\' stroke=\'white\' stroke-width=\'22\' stroke-linecap=\'round\'/></svg><div style=\'color:white;font-size:32px;font-weight:700\'>BioAge</div><div style=\'color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:3px;margin-top:6px\'>CLINICAL FITNESS INDEX</div><div style=\'margin-top:24px;color:rgba(255,255,255,0.6);font-size:13px\'>Versión completa disponible en claude.ai</div></div>';
+</script>
 </body>
 </html>
